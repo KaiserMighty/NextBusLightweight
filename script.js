@@ -82,7 +82,7 @@ function stopDetails(xml)
     {
         let stop = stops[i].getAttribute("stopId");
         let title = stops[i].getAttribute("title");
-        if (title == null || route == null) continue; // Skip invalid entries
+        if (title == null || stop == null) continue; // Skip invalid entries
         link = "https://retro.umoiq.com/service/publicXMLFeed?command=predictions&a=sfmuni-sandbox&stopId="+stop+"&routeTag="+route
         HTML += "<button type='button' class='button' onclick='loadXML(3,\""+link+"\")'>"+title+"</button>";
     }
