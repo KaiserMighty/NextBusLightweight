@@ -1,14 +1,12 @@
 let xmlhttp = new XMLHttpRequest();
-xmlhttp.onreadystatechange = function () {
-
-    // Request finished and response 
-    // is ready and Status is "OK"
-    if (this.readyState == 4 && this.status == 200) {
+xmlhttp.onreadystatechange = function ()
+{
+    if (this.readyState == 4 && this.status == 200)
+    {
         routeDetails(this);
     }
 };
 
-// employee.xml is the external xml file
 xmlhttp.open("GET", "https://retro.umoiq.com/service/publicXMLFeed?command=routeList&a=sfmuni-sandbox", true);
 xmlhttp.send();
 
@@ -47,24 +45,29 @@ function busDetails(xml)
     let i;
     let xmlDoc = xml.responseXML;
     let button =
-        `<h2>Next Bus in Minutes</h2>`;
+        `<h2>Next Bus Arrives in</h2>`;
     let x = xmlDoc.getElementsByTagName("prediction");
     let y = 3;
     if (x.length < 3) y = x.length;
-    // Start to fetch the data by using TagName 
-    for (i = 0; i < x.length; i++)
+    
+    for (i = 0; i < y; i++)
     {
         if (x[i].getAttribute("minutes") == 0)
         {
-            button += "<h3>" + x[i].getAttribute("seconds") + " Seconds" + "</h3>";
+            button += "<h3>" + x[i].getAttribute("seconds") + " seconds" + "</h3>";
+        }
+        else if (x[i].getAttribute("minutes") == 1)
+        {
+            button += "<h3>" + x[i].getAttribute("minutes") + " minute" + "</h3>";
         }
         else
         {
-            button += "<h3>" + x[i].getAttribute("minutes") + " Minutes" + "</h3>";
+            button += "<h3>" + x[i].getAttribute("minutes") + " minutes" + "</h3>";
         }
     }
-
-    // Print the xml data in table form
+    let m = xmlDoc.getElementsByTagName("predictions");
+    let j = m[0].getAttribute("stopTag") + " " + m[0].getAttribute("routeTag") + " " + m[0].getAttribute("routeTag") + " " + m[0].getAttribute("stopTitle");
+    button += "<button type='button' class='button' onclick='favorite(\""+j+"\")'>Favorite Stop</button>";
     document.getElementById("id").innerHTML = button;
 }
 
@@ -76,17 +79,14 @@ function stopDetails(xml)
         `<h2>Choose your Stop</h2>`;
     let x = xmlDoc.getElementsByTagName("stop");
     let z = xmlDoc.getElementsByTagName("route")[0].getAttribute("tag");
-
-    // Start to fetch the data by using TagName 
+ 
     for (i = 0; i < x.length; i++)
     {
         let y = x[i].getAttribute("stopId");
         let thing = x[i].getAttribute("title");
-        if (thing == null) continue;
-        button += "<button type='button' class='button' onclick='loadBuses(" +y+","+z+")'>"+thing+"</button>";                
+        if (thing == null || y == null) continue;
+        button += "<button type='button' class='button' onclick='loadBuses(\""+y+"\",\""+z+"\")'>"+thing+"</button>";
     }
-
-    // Print the xml data in table form
     document.getElementById("id").innerHTML = button;
 }
 
@@ -98,14 +98,16 @@ function routeDetails(xml)
         `<h2>Choose your Route</h2>`;
     let x = xmlDoc.getElementsByTagName("route");
 
-    // Start to fetch the data by using TagName 
     for (i = 0; i < x.length; i++)
     {
         let y = x[i].getAttribute("tag");
         let thing = x[i].getAttribute("title");
-        button += "<button type='button' class='button' onclick='loadStops("+y+")'>"+thing+"</button>";                
+        button += "<button type='button' class='button' onclick='loadStops(\""+y+"\")'>"+thing+"</button>";
     }
-
-    // Print the xml data in table form
     document.getElementById("id").innerHTML = button;
+}
+
+function favorite(x)
+{
+    
 }
