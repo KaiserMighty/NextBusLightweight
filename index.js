@@ -41,10 +41,10 @@ function busDetails(xml)
     console.log(times.length);
 
     // Create Back Button
-    let HTML = "<h2 class='choice_header'>Next Bus Arrives in</h2>";
-    if (displayAmount == 0) HTML = "<h2 class='choice_header'>No Buses Currently</h2>";
+    let HTML = "<h2>Next Bus Arrives in</h2>";
+    if (times.length == 0) HTML = "<h2>No Buses Currently</h2>";
     let link = "https://retro.umoiq.com/service/publicXMLFeed?command=routeConfig&a=sfmuni-sandbox&r="+route;
-    HTML += "<button type='button' class='back_button' onclick='loadXML(2,\""+link+"\")'>Back</button><br>";
+    HTML += "<button type='button' onclick='loadXML(2,\""+link+"\")'>Back</button><br>";
     
     // Iterate through times and display them
     for (let i = 0; i < displayAmount; i++)
@@ -52,17 +52,17 @@ function busDetails(xml)
         // Display as seconds
         if (times[i].getAttribute("minutes") == 0)
         {
-            HTML += "<h3 class='time_entry'>" + times[i].getAttribute("seconds") + " seconds</h3>";
+            HTML += "<button type='button' class='button_text'>"+times[i].getAttribute("seconds")+" seconds</button>";
         }
         // Display as minute
         else if (times[i].getAttribute("minutes") == 1)
         {
-            HTML += "<h3 class='time_entry'>" + times[i].getAttribute("minutes") + " minute</h3>";
+            HTML += "<button type='button' class='button_text'>"+times[i].getAttribute("minutes")+" minute</button>";
         }
         // Display as minutes
         else
         {
-            HTML += "<h3 class='time_entry'>" + times[i].getAttribute("minutes") + " minutes</h3>";
+            HTML += "<button type='button' class='button_text'>"+times[i].getAttribute("minutes")+" minutes</button>";
         }
     }
     document.getElementById("id").innerHTML = HTML;
@@ -75,9 +75,9 @@ function stopDetails(xml)
     let route = xml.getElementsByTagName("route")[0].getAttribute("tag");
     
     // Create Back Button
-    let HTML = "<h2 class='choice_header'>Choose your Stop for " + route + "</h2>";
+    let HTML = "<h2>Choose your Stop for " + route + "</h2>";
     let link = "https://retro.umoiq.com/service/publicXMLFeed?command=routeList&a=sfmuni-sandbox";
-    HTML += "<button type='button' class='back_button' onclick='loadXML(1,\""+link+"\")'>Back</button><br>";
+    HTML += "<button type='button' onclick='loadXML(1,\""+link+"\")'>Back</button><br>";
     
     // Iterate through stops and display them
     for (let i = 0; i < stops.length; i++)
@@ -86,7 +86,7 @@ function stopDetails(xml)
         let title = stops[i].getAttribute("title");
         if (title == null || stop == null) continue; // Skip invalid entries
         link = "https://retro.umoiq.com/service/publicXMLFeed?command=predictions&a=sfmuni-sandbox&stopId="+stop+"&routeTag="+route
-        HTML += "<button type='button' class='button' onclick='loadXML(3,\""+link+"\")'>"+title+"</button>";
+        HTML += "<button type='button' onclick='loadXML(3,\""+link+"\")'>"+title+"</button>";
     }
     document.getElementById("id").innerHTML = HTML;
 }
@@ -94,7 +94,7 @@ function stopDetails(xml)
 // Parse and display all routes
 function routeDetails(xml)
 {
-    let HTML = "<h2 class='choice_header'>Choose your Route</h2>";
+    let HTML = "<h2>Choose your Route</h2>";
     let routes = xml.getElementsByTagName("route");
 
     // Iterate through all routes and display them
@@ -103,7 +103,7 @@ function routeDetails(xml)
         let route = routes[i].getAttribute("tag");
         let title = routes[i].getAttribute("title");
         let link = "https://retro.umoiq.com/service/publicXMLFeed?command=routeConfig&a=sfmuni-sandbox&r="+route;
-        HTML += "<button type='button' class='button' onclick='loadXML(2,\""+link+"\")'>"+title+"</button>";
+        HTML += "<button type='button' onclick='loadXML(2,\""+link+"\")'>"+title+"</button>";
     }
     document.getElementById("id").innerHTML = HTML;
 }
