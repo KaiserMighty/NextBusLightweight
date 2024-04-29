@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<script>
+    // Initial function/main
+    loadXML("sfsu28","https://retro.umoiq.com/service/publicXMLFeed?command=predictions&a=sfmuni-sandbox&stopId=14341&routeTag=28");
+    loadXML("sfsu28r","https://retro.umoiq.com/service/publicXMLFeed?command=predictions&a=sfmuni-sandbox&stopId=14341&routeTag=28R");
+    loadXML("bart28","https://retro.umoiq.com/service/publicXMLFeed?command=predictions&a=sfmuni-sandbox&stopId=13356&routeTag=28");
+    loadXML("bart28r","https://retro.umoiq.com/service/publicXMLFeed?command=predictions&a=sfmuni-sandbox&stopId=13356&routeTag=28R");
+
+    // Fetch all XML file and redirect to next function
+    function loadXML(id, link)
+    {
+        let xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function ()
+        {
+            if (this.readyState == 4 && this.status == 200)
+            {
+                let xmlDoc = this.responseXML;
+                busDetails(xmlDoc, id);
+            }
+        };
+        xmlhttp.open("GET", link, true);
+        xmlhttp.send();
+    }
+
+    // Parse and display when the next bus is arriving
+    function busDetails(xml, id)
+    {
+        let times = xml.getElementsByTagName("prediction");
+        let HTML = "";
+        // Always only display 3 or less times
+        let displayAmount = 3;
+        if (times.length < 3) displayAmount = times.length;
+        if (times.length == 0) HTML = "<h3>No Buses</h3>";
+        // Iterate through times and display them
+        HTML += "<h3>";
+        for (let i = 0; i < displayAmount; i++)
+        {
+            HTML += times[i].getAttribute("minutes")+", ";
+        }
+        HTML = HTML.slice(0, -2); // Slice off last comma
+        HTML += " minute(s)</h3>";
+        document.getElementById(id).innerHTML = HTML;
+    }
+</script>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Where's My MUNI?</title>
+        <style>
+            h1
+            {
+                font-family: 'Open Sans';
+                font-size: 8vh;
+                text-align: center;
+                margin: 0;
+            }
+            h2
+            {
+                font-family: 'Open Sans';
+                font-size: 6vh;
+                text-align: center;
+                margin: 0;
+            }
+            h3
+            {
+                font-family: 'Open Sans';
+                font-size: 4vh;
+                text-align: center;
+                margin-block-start: 0vh;
+                margin-block-end: 2vh;
+            }
+            .container
+            {
+                margin: 0;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <div class="container">
+                <h1>To SFSU</h1>
+                <h2>Route 28</h2>
+                <div id="sfsu28"></div>
+                <h2>Route 28R</h2>
+                <div id="sfsu28r"></div>
+                <h1 style="margin-block-start: 4vh;">To BART</h1>
+                <h2>Route 28</h2>
+                <div id="bart28"></div>
+                <h2>Route 28R</h2>
+                <div id="bart28r"></div>
+            </div>
+        </main>
+    </body>
+</html>
